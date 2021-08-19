@@ -8,7 +8,7 @@ namespace Investimentos.Application.Contracts
         Task<TransacaoDto[]> SaveTransacao(int ativoId, TransacaoDto[] models);
         Task<bool> DeleteTransacao(int ativoId, int transacaoId);
 
-        Task<TransacaoDto[]> GetTransacoesByativoIdAsync(int ativoId);
-        Task<TransacaoDto> GetTransacaoByIdsAsync(int ativoId, int id);
+        Task<TransacaoDto[]> GetTransacoesByAtivoIdAsync(int ativoId);
+        Task<TransacaoDto> GetTransacaoByIdsAsync(int ativoId, int transacaoId);
     }
 }

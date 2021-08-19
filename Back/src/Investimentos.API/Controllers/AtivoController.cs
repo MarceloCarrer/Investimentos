@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Investimentos.Application.Contracts;
 using Investimentos.Application.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Investimentos.API.Controllers
 {
@@ -135,6 +132,5 @@ namespace Investimentos.API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar deletar ativo. Erro: {ex.Message}");
             }
         }
-
     }
 }

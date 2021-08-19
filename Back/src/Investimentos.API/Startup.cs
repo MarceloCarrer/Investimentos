@@ -38,7 +38,7 @@ namespace Investimentos.API
             services.AddScoped<IAtivoPersistence, AtivoPersistence>();
             services.AddScoped<IAtivoService, AtivoService>();
             services.AddScoped<ITransacaoPersistence, TransacaoPersistence>();
-            //services.AddScoped<ITransacaoService, TransacaoService>();
+            services.AddScoped<ITransacaoService, TransacaoService>();
 
             services.AddCors();
             services.AddSwaggerGen(c =>

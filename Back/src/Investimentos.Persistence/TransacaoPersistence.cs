@@ -26,7 +26,7 @@ namespace Investimentos.Persistence
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Transacao[]> GetTransacaosByAtivoIdAsync(int ativoId)
+        public async Task<Transacao[]> GetTransacoesByAtivoIdAsync(int ativoId)
         {
             IQueryable<Transacao> query = _context.Transacao;
 

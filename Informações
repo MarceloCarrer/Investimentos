@@ -1,0 +1,9 @@
+-- INSTALAÇÃO FRONT --
+npm install -g @angular/cli
+npm install bootstrap
+ng add ngx-bootstrap
+npm install @angular/animations --save
+npm install --save @fortawesome/fontawesome-free
+npm install ngx-toastr --save
+npm install ngx-spinner --save
+npm install bootswatch

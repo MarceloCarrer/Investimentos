@@ -26,11 +26,11 @@ namespace Investimentos.Application.Dtos
         public DateTime? DataVenda { get; set; }
         
         [Display(Name = "Valor Venda")]
-        [Range(0.01, 9999, ErrorMessage = "{0} está fora do limite.")]
+        [Range(0.00, 9999, ErrorMessage = "{0} está fora do limite.")]
         public decimal? ValorVenda { get; set; }
         
         [Required(ErrorMessage = "{0} é obrigatório.")]
-        [Range(1, 999999999, ErrorMessage = "{0} está fora do limite.")]
+        [Range(0, 999999999, ErrorMessage = "{0} está fora do limite.")]
         public int? QtdVenda { get; set; }
 
         public int AtivoId { get; set; }

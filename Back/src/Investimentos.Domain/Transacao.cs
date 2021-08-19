@@ -16,14 +16,11 @@ namespace Investimentos.Domain
 
         [Required]
         public int QtdCompra { get; set; }
-
-        [Required]
+        
         public DateTime? DataVenda { get; set; }
-
-        [Required]
+        
         public decimal? ValorVenda { get; set; }
-
-        [Required]
+        
         public int? QtdVenda { get; set; }
 
         public int AtivoId { get; set; }
