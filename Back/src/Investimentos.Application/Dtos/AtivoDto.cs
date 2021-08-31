@@ -22,7 +22,8 @@ namespace Investimentos.Application.Dtos
         public string Setor { get; set; }
 
         [Required(ErrorMessage = "{0} é obrigatório.")]
-        [MaxLength(10, ErrorMessage = "{0} deve ter no máximo 10 letras.")]
+        [MinLength(1, ErrorMessage = "{0} deve ter no mínimo 1 caracter.")]
+        [MaxLength(10, ErrorMessage = "{0} deve ter no máximo 10 caracteres.")]
         public string Tipo { get; set; }
 
         [RegularExpression(@".*\.(jpe?g|png)$", ErrorMessage = "Somente formatos JPG, JPEG ou PNG aceitos.")]

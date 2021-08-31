@@ -3,14 +3,16 @@ using System;
 using Investimentos.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Investimentos.Persistence.Migrations
 {
     [DbContext(typeof(InvestimentoContext))]
-    partial class InvestimentoContextModelSnapshot : ModelSnapshot
+    [Migration("20210831115004_Update_Tabela_TR")]
+    partial class Update_Tabela_TR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,9 +99,6 @@ namespace Investimentos.Persistence.Migrations
 
                     b.Property<decimal?>("ValorVenda")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool?>("Vendido")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

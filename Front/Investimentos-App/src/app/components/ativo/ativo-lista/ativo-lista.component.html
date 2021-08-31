@@ -16,7 +16,7 @@
   <table class="table table-striped table-hover">
     <thead class="thead-dark">
       <tr>
-        <th class="d-none d-md-table-cell">
+        <th>
           <button type="button" class="btn btn-outline-light btn-sm" tooltip="Exibir/Ocultar Imagem"
           (click)="ocultarImagem()">
           <i class="{{mostrarImagem ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
@@ -31,7 +31,7 @@
   </thead>
   <tbody *ngIf="ativos && ativos.length">
     <tr *ngFor="let ativo of ativosFiltrados" (click)="detalheAtivo(ativo.id)" style="cursor: pointer;">
-      <td class="d-none d-md-table-cell">
+      <td>
         <img *ngIf="ativo.imagem === null || ativo.imagem === '' || !ativo.imagem" [collapse]="!mostrarImagem" [isAnimated]="true" src="/assets/imagem_padrao.png" alt="">
         <img *ngIf="ativo.imagem" [collapse]="!mostrarImagem" [isAnimated]="true" src="/assets/{{ativo.imagem}}" alt="">
       </td>

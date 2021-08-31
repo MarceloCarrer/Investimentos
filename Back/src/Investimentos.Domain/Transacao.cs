@@ -9,7 +9,7 @@ namespace Investimentos.Domain
         public int Id { get; set; }
 
         [Required]
-        public DateTime DataCompra { get; set; }
+        public string DataCompra { get; set; }
 
         [Required]
         public decimal ValorCompra { get; set; }
@@ -17,11 +17,25 @@ namespace Investimentos.Domain
         [Required]
         public int QtdCompra { get; set; }
         
-        public DateTime? DataVenda { get; set; }
+        public string DataVenda { get; set; }
         
         public decimal? ValorVenda { get; set; }
         
         public int? QtdVenda { get; set; }
+
+        public decimal? ValorTotalVenda { get; set; }
+
+        public decimal? LucroPorc { get; set; }
+
+        public decimal? Lucro { get; set; }
+
+        public decimal? Imposto { get; set; }
+
+        public decimal? LucroLiquido { get; set; }
+
+        public decimal? RetornoLiquido { get; set; }     
+        
+        public bool? Vendido { get; set; }   
 
         public int AtivoId { get; set; }
 

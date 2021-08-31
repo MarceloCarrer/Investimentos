@@ -1,3 +1,406 @@
-<p>
-  ativo-detalhe works!
-</p>
+<div class="card rounded shadow-sm">
+  <form [formGroup]="form">
+    <div class="p-3">
+      <button type="button" class="btn btn-outline-dark" tooltip="Exibir/Ocultar Ativo"
+      [disabled]="ocultar" (click)="ocultarAtivo()">
+      <i class="{{mostrarAtivo ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
+      {{mostrarAtivo ? 'Ocultar' : retornaTituloAT(ativo.sigla + ativo.tipo)}}
+    </button>
+  </div>
+  <div [collapse]="!mostrarAtivo" [isAnimated]="true">
+    <div class="p-3">
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Sigla</label>
+          <input type="text" class="form-control is-invalid"
+          [ngClass]="cssValidator(fv.sigla)" formControlName="sigla" placeholder="Insira a Sigla">
+          <div *ngIf="fv.sigla.errors?.required" class="invalid-feedback">
+            Sigla é obrigatório.
+          </div>
+          <div *ngIf="fv.sigla.errors?.minlength" class="invalid-feedback">
+            Sigla deve ter no mínimo 4 letras.
+          </div>
+          <div *ngIf="fv.sigla.errors?.maxlength" class="invalid-feedback">
+            Sigla deve ter no máximo 4 letras.
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label>Tipo</label>
+          <select class="form-select" aria-label="Default select example" [ngClass]="cssValidator(fv.tipo)" formControlName="tipo">
+            <option value="">Selecione</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="11">11</option>
+            <option value="34">34</option>
+          </select>
+          <div *ngIf="fv.tipo.errors?.required" class="invalid-feedback">
+            Tipo é obrigatório.
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Nome</label>
+          <input type="text" class="form-control is-invalid"
+          [ngClass]="cssValidator(fv.nome)" formControlName="nome" placeholder="Insira a Nome">
+          <div *ngIf="fv.nome.errors?.required" class="invalid-feedback">
+            Nome é obrigatório.
+          </div>
+          <div *ngIf="fv.nome.errors?.minlength" class="invalid-feedback">
+            Nome deve ter no mínimo 2 letras.
+          </div>
+          <div *ngIf="fv.nome.errors?.maxlength" class="invalid-feedback">
+            Nome deve ter no máximo 50 letras.
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Setor</label>
+          <input type="text" class="form-control is-invalid"
+          [ngClass]="cssValidator(fv.setor)" formControlName="setor" placeholder="Insira a Setor">
+          <div *ngIf="fv.setor.errors?.required" class="invalid-feedback">
+            Setor é obrigatório.
+          </div>
+          <div *ngIf="fv.setor.errors?.minlength" class="invalid-feedback">
+            Setor deve ter no mínimo 2 letras.
+          </div>
+          <div *ngIf="fv.setor.errors?.maxlength" class="invalid-feedback">
+            Setor deve ter no máximo 100 letras.
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label>Imagem</label>
+          <input type="text" class="form-control" formControlName="imagem" placeholder="Insira a Imagem">
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer">
+      <div class="d-flex">
+        <button class="btn btn-outline-dark mr-auto" (click)="openModal(template)">
+          Cancelar Alteração
+        </button>
+        <button class="btn btn-dark" [disabled]="!form.valid" (click)="salvarAtivo()">
+          Salvar Ativo
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Todos os dados não salvos serão apagados.</p>
+    <button type="button" class="btn btn-outline-dark mr-2" (click)="confirm()" >Sim</button>
+    <button type="button" class="btn btn-dark" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
+
+<!-- Transações -->
+<div class="card rounded shadow-sm mt-4" *ngIf="modoEditar">
+  <div class="p-3">
+    <div class="d-flex border-bottom">
+      <h2 class="mr-auto">
+        Transações
+      </h2>
+      <h2>
+        <i class="fas fa-balance-scale"></i>
+      </h2>
+    </div>
+    <p>Clique em Transação para adicionar e preencher</p>
+    <div class="form-row p-1">
+      <div [formGroup]="form" class="col">
+        <div formArrayName="transacoes" *ngFor="let transacao of transacoes.controls; let i=index;">
+          <fieldset [formGroupName]="i" *ngIf="transacoes.get(i+'.vendido').value !== true">
+            <legend class="d-flex justify-content-between capitalize">
+              <b>
+                {{
+                  retornaTituloTR(transacoes.get(i+'.dataCompra').value)
+                }}
+              </b>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" formControlName="vendido">
+                <label class="form-check-label">Vendido</label>
+              </div>
+            </legend>
+            <div class="row">
+              <div class="form-row">
+                <div class="form-group col-md-2">
+                  <label>Data Compra</label>
+                  <input type="datetime" class="form-control" mask="d0/M0/0000"
+                  [ngClass]="cssValidator(transacoes.get(i+'.dataCompra')) "formControlName="dataCompra">
+                  <div *ngIf="transacoes.get(i+'.dataCompra').errors?.required" class="invalid-feedback">
+                    Data é obrigatório.
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Data Venda</label>
+                  <input type="datetime" class="form-control" mask="d0/M0/0000" formControlName="dataVenda">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-2">
+                  <label>Valor Compra</label>
+                  <input type="text" currencyMask class="form-control"
+                  [ngClass]="cssValidator(transacoes.get(i+'.valorCompra'))"
+                  formControlName="valorCompra" placeholder="R$ 0,00">
+                  <div *ngIf="transacoes.get(i+'.valorCompra').errors?.required" class="invalid-feedback">
+                    Valor é obrigatório.
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Quantidade Compra</label>
+                  <input type="number" step="1" min="1" class="form-control"
+                  [ngClass]="cssValidator(transacoes.get(i+'.qtdCompra'))"
+                  formControlName="qtdCompra" placeholder="Insira a Quantidade.">
+                  <div *ngIf="transacoes.get(i+'.qtdCompra').errors?.required" class="invalid-feedback">
+                    Quantidade é obrigatório.
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Total Compra</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorCompra').value * transacoes.get(i+'.qtdCompra').value}}"
+                  formControlName="valorTotalCompra" placeholder="R$ 0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Valor Venda</label>
+                  <input type="text" currencyMask class="form-control"
+                  formControlName="valorVenda" placeholder="R$ 0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Quantidade Venda</label>
+                  <input type="number" step="1" min="1" class="form-control"
+                  formControlName="qtdVenda" placeholder="Insira a Quantidade.">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Total Venda</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value * transacoes.get(i+'.qtdVenda').value}}"
+                  formControlName="valorTotalVenda" placeholder="R$ 0,00">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-2">
+                  <label>Lucro %</label>
+                  <input type="number" class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+                  ? '0,00' : (((transacoes.get(i+'.valorVenda').value / transacoes.get(i+'.valorCompra').value)-1)*100).toFixed(2)}}"
+                  formControlName="lucroPorc" placeholder="0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Lucro</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+                  ? '0,00' : ((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value).toFixed(2)}}"
+                  formControlName="lucro" placeholder="0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Imposto</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+                  ? '0,00' : ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15).toFixed(2)}}"
+                  formControlName="imposto" placeholder="0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Lucro Liquído</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === '' || transacoes.get(i+'.valorCompra').value >= transacoes.get(i+'.valorVenda').value
+                  ? '0,00' : (((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value) - ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15)).toFixed(2)}}"
+                  formControlName="lucroLiquido" placeholder="0,00">
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Retorno Liquído</label>
+                  <input type="text" currencyMask class="form-control" readonly
+                  value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === '' || transacoes.get(i+'.valorCompra').value >= transacoes.get(i+'.valorVenda').value
+                  ? '0,00' : ((transacoes.get(i+'.valorVenda').value * transacoes.get(i+'.qtdVenda').value) - ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15)).toFixed(2)}}"
+                  formControlName="retornoLiquido" placeholder="0,00">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <br>
+                  <button (click)="removerTransacao(templateTR, i)" class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
+                  tooltip="Excluir Transação"
+                  [adaptivePosition]="true"
+                  [delay]="500"
+                  placement="left">
+                  <i class="fa fa-window-close my-1"></i>
+                  <b class="ml-1 d-none d-sm-block">Excluir</b>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <button class="d-flex btn btn-outline-primary" (click)="adicionarTransacao()">
+    <i class="fa fa-plus-circle my-1"></i>
+    <b class="ml-1">Transação</b>
+  </button>
+</div>
+<div class="card-footer">
+  <div class="d-flex">
+    <button class="btn btn-outline-dark mr-auto">
+      Cancelar Alteração
+    </button>
+    <button [disabled]="!form.controls.transacoes.valid" class="btn btn-dark" (click)="salvarTransacao()">
+      Salvar Transação
+    </button>
+  </div>
+</div>
+<hr>
+<hr>
+<div class="p-3">
+  <!-- Transações Vendidas -->
+  <div class="d-flex border-bottom">
+    <button type="button" class="btn btn-outline-dark" tooltip="Exibir/Ocultar Transação"
+    (click)="ocultarTransacao()">
+    <i class="{{mostrarTransacao ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
+    {{mostrarTransacao ? 'Ocultar' : 'Histórico'}}
+  </button>
+</div>
+<br>
+<div class="form-row p-1">
+  <div [formGroup]="form" class="col">
+    <div formArrayName="transacoes" *ngFor="let transacao of transacoes.controls; let i=index;">
+      <fieldset [formGroupName]="i" class="form-group" *ngIf="transacoes.get(i+'.vendido').value === true && transacoes.get(i+'.vendido').value !== null">
+        <legend class="d-flex justify-content-between capitalize">
+          <b>
+            {{
+              retornaTituloTR(transacoes.get(i+'.dataCompra').value)
+            }}
+          </b>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="vendido">
+            <label class="form-check-label">Vendido</label>
+          </div>
+        </legend>
+        <div class="row" [collapse]="!mostrarTransacao" [isAnimated]="true">
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label>Data Compra</label>
+              <input type="datetime" class="form-control" mask="d0/M0/0000"
+              [ngClass]="cssValidator(transacoes.get(i+'.dataCompra'))"formControlName="dataCompra">
+              <div *ngIf="transacoes.get(i+'.dataCompra').errors?.required" class="invalid-feedback">
+                Data é obrigatório.
+              </div>
+            </div>
+            <div class="form-group col-md-2">
+              <label>Data Venda</label>
+              <input type="datetime" class="form-control" mask="d0/M0/0000" formControlName="dataVenda">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label>Valor Compra</label>
+              <input type="text" currencyMask class="form-control"
+              [ngClass]="cssValidator(transacoes.get(i+'.valorCompra'))"
+              formControlName="valorCompra" placeholder="R$ 0,00">
+              <div *ngIf="transacoes.get(i+'.valorCompra').errors?.required" class="invalid-feedback">
+                Valor é obrigatório.
+              </div>
+            </div>
+            <div class="form-group col-md-2">
+              <label>Quantidade Compra</label>
+              <input type="number" step="1" min="1" class="form-control"
+              [ngClass]="cssValidator(transacoes.get(i+'.qtdCompra'))"
+              formControlName="qtdCompra" placeholder="Insira a Quantidade.">
+              <div *ngIf="transacoes.get(i+'.qtdCompra').errors?.required" class="invalid-feedback">
+                Quantidade é obrigatório.
+              </div>
+            </div>
+            <div class="form-group col-md-2">
+              <label>Total Compra</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorCompra').value * transacoes.get(i+'.qtdCompra').value}}"
+              formControlName="valorTotalCompra" placeholder="R$ 0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Valor Venda</label>
+              <input type="text" currencyMask class="form-control"
+              formControlName="valorVenda" placeholder="R$ 0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Quantidade Venda</label>
+              <input type="number" step="1" min="1" class="form-control"
+              formControlName="qtdVenda" placeholder="Insira a Quantidade.">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Total Venda</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value * transacoes.get(i+'.qtdVenda').value}}"
+              formControlName="valorTotalVenda" placeholder="R$ 0,00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label>Lucro %</label>
+              <input type="number" class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+              ? '0,00' : (((transacoes.get(i+'.valorVenda').value / transacoes.get(i+'.valorCompra').value)-1)*100).toFixed(2)}}"
+              formControlName="lucroPorc" placeholder="0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Lucro</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+              ? '0,00' : ((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value).toFixed(2)}}"
+              formControlName="lucro" placeholder="0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Imposto</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+              ? '0,00' : ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15).toFixed(2)}}"
+              formControlName="imposto" placeholder="0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Lucro Liquído</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+              ? '0,00' : (((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value) - ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15)).toFixed(2)}}"
+              formControlName="lucroLiquido" placeholder="0,00">
+            </div>
+            <div class="form-group col-md-2">
+              <label>Retorno Liquído</label>
+              <input type="text" currencyMask class="form-control" readonly
+              value="{{transacoes.get(i+'.valorVenda').value === null || transacoes.get(i+'.valorVenda').value === ''
+              ? '0,00' : ((transacoes.get(i+'.valorVenda').value * transacoes.get(i+'.qtdVenda').value) - ((((transacoes.get(i+'.valorVenda').value - transacoes.get(i+'.valorCompra').value) * transacoes.get(i+'.qtdVenda').value)/100)*15)).toFixed(2)}}"
+              formControlName="retornoLiquido" placeholder="0,00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <br>
+              <button (click)="removerTransacao(templateTR, i)" class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
+              tooltip="Excluir Transação"
+              [adaptivePosition]="true"
+              [delay]="500"
+              placement="left">
+              <i class="fa fa-window-close my-1"></i>
+              <b class="ml-1 d-none d-sm-block">Excluir</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<br>
+<ng-template #templateTR>
+  <div class="modal-body text-center">
+    <p>Confirma a exclusão da transação do dia <b>{{this.transacaoAtual.dataCompra}}?</b></p>
+    <button type="button" class="btn btn-outline-dark mr-2" (click)="confirmDeleteTR()" >Sim</button>
+    <button type="button" class="btn btn-dark" (click)="declineDeleteTR()" >Não</button>
+  </div>
+</ng-template>

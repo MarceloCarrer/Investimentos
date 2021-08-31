@@ -19,7 +19,7 @@ namespace Investimentos.Persistence
         {
             IQueryable<Transacao> query = _context.Transacao;
 
-            query = query.AsNoTracking()
+            query = query.AsNoTracking().OrderByDescending(tr => tr.DataCompra)
                          .Where(tr => tr.AtivoId == ativoId
                                        && tr.Id == id);
 

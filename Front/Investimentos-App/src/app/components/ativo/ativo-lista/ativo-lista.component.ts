@@ -100,6 +100,4 @@ export class AtivoListaComponent implements OnInit {
       this.router.navigate([`ativos/detalhe/${id}`]);
     }
 
-
-
 }
